@@ -192,7 +192,23 @@ function setEventListener(ws: WebSocket, element: Element, name: string) {
     ws.send(JSON.stringify(msg));
   }
 
-  element.addEventListener(eventName, listener);
+  if(eventName == 'fileLoad'){
+    element.addEventListener('input', (event: any) => {
+      const fileElement = element as HTMLInputElement;
+      if(fileElement.files){
+        const file = fileElement.files[0];
+        if(file){
+          const reader = new FileReader();
+          reader.addEventListener('load', (event: any) => {
+            listener({name: file.name, content: reader.result});
+          }, false);
+          reader.readAsDataURL(file);
+        }
+      }
+    });
+  }else{
+    element.addEventListener(eventName, listener);
+  }
 
   const elementListeners = listeners.get(element);
 

@@ -94,7 +94,24 @@ function setEventListener(ws, element, name) {
         }
         ws.send(JSON.stringify(msg));
     };
-    element.addEventListener(eventName, listener);
+    if (eventName == 'fileLoad') {
+        element.addEventListener('input', (event) => {
+            const fileElement = element;
+            if (fileElement.files) {
+                const file = fileElement.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.addEventListener('load', (event) => {
+                        listener({ name: file.name, content: reader.result });
+                    }, false);
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+    }
+    else {
+        element.addEventListener(eventName, listener);
+    }
     const elementListeners = listeners.get(element);
     if (elementListeners === undefined) {
         listeners.set(element, new Map([[name, listener]]));
