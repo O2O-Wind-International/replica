@@ -94,7 +94,7 @@ function setEventListener(ws, element, name) {
         }
         ws.send(JSON.stringify(msg));
     };
-    if (eventName == 'fileLoad') {
+    if (name == 'onFileLoad') {
         element.addEventListener('input', (event) => {
             const fileElement = element;
             if (fileElement.files) {
